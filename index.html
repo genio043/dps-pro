@@ -1,0 +1,95 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="google-adsense-account" content="ca-pub-0463493221079646">
+    <title>Calculadora DPS Pro</title>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <style>
+        body { font-family: 'Arial', sans-serif; background: #1e1e1e; color: #ddd; text-align: center; margin: 20px; }
+        h1 { font-size: 28px; color: #00ccff; text-shadow: 0 0 10px #00ccff; }
+        .section { margin: 20px 0; padding: 15px; background: #2a2a2a; border-radius: 8px; }
+        .input-group { display: inline-block; margin: 10px; text-align: left; }
+        label { display: block; color: #bbb; }
+        input, select { padding: 8px; width: 80px; background: #333; color: #fff; border: 1px solid #444; border-radius: 4px; }
+        button { padding: 10px 20px; background: #00ccff; color: #fff; border: none; border-radius: 4px; cursor: pointer; }
+        button:hover { background: #0099cc; }
+        #result { margin: 20px; font-size: 20px; color: #00ff99; }
+        canvas { max-width: 600px; margin: 20px auto; }
+    </style>
+</head>
+<body>
+    <h1>Calculadora DPS Pro</h1>
+    <div class="section">
+        <div class="input-group"><label>Daño:</label><input type="number" id="damage" min="1" value="10"></div>
+        <div class="input-group"><label>Cadencia:</label><input type="number" id="fireRate" min="1" value="60"><select id="fireRateUnit"><option value="rpm">RPM</option><option value="rps">RPS</option></select></div>
+        <div class="input-group"><label>Precisión (%):</label><input type="number" id="accuracy" min="0" max="100" value="100"></div>
+        <div class="input-group"><label>Tiempo Recarga (s):</label><input type="number" id="reloadTime" min="0" step="0.1" value="2"></div>
+        <div class="input-group"><label>Munición:</label><input type="number" id="ammo" min="1" value="30"></div>
+    </div>
+    <button onclick="calculateDPS()">Calcular DPS</button>
+    <div id="result"></div>
+    <canvas id="dpsChart"></canvas>
+
+    <script>
+        let chart;
+        function calculateDPS() {
+            const damage = parseFloat(document.getElementById('damage').value);
+            let fireRate = parseFloat(document.getElementById('fireRate').value);
+            const fireRateUnit = document.getElementById('fireRateUnit').value;
+            const accuracy = parseFloat(document.getElementById('accuracy').value) / 100;
+            const reloadTime = parseFloat(document.getElementById('reloadTime').value);
+            const ammo = parseFloat(document.getElementById('ammo').value);
+
+            if (damage <= 0 || fireRate <= 0 || ammo <= 0) {
+                document.getElementById('result').innerHTML = "¡Valores inválidos!";
+                return;
+            }
+
+            fireRate = fireRateUnit === 'rpm' ? fireRate / 60 : fireRate;
+            const effectiveDamage = damage * accuracy;
+            const burstDPS = effectiveDamage * fireRate;
+            const cycleTime = (ammo / fireRate) + reloadTime;
+            const sustainedDPS = (effectiveDamage * ammo) / cycleTime;
+
+            document.getElementById('result').innerHTML = `
+                DPS de Ráfaga: ${burstDPS.toFixed(2)}<br>
+                DPS Sostenido: ${sustainedDPS.toFixed(2)}
+            `;
+
+            const dataPoints = [];
+            let time = 0;
+            while (time < 10) {
+                time += 0.1;
+                dataPoints.push({ time: time.toFixed(2), dps: time <= ammo / fireRate ? burstDPS : 0 });
+            }
+            drawChart(dataPoints);
+        }
+
+        function drawChart(dataPoints) {
+            const ctx = document.getElementById('dpsChart').getContext('2d');
+            if (chart) chart.destroy();
+            chart = new Chart(ctx, {
+                type: 'line',
+                data: {
+                    labels: dataPoints.map(d => d.time),
+                    datasets: [{
+                        label: 'DPS',
+                        data: dataPoints.map(d => d.dps),
+                        borderColor: '#00ff99',
+                        fill: false
+                    }]
+                },
+                options: {
+                    scales: {
+                        y: { beginAtZero: true, title: { display: true, text: 'DPS', color: '#ddd' } },
+                        x: { title: { display: true, text: 'Tiempo (s)', color: '#ddd' } }
+                    },
+                    plugins: { legend: { labels: { color: '#ddd' } } }
+                }
+            });
+        }
+    </script>
+</body>
+</html>
