@@ -22,11 +22,18 @@
 <body>
     <h1>Calculadora DPS Pro</h1>
     <div class="section">
+        <div class="input-group"><label>Tipo de Arma:</label><select id="weaponType"><option value="hitscan">Hitscan</option><option value="projectile">Proyectil</option><option value="area">Área</option></select></div>
         <div class="input-group"><label>Daño:</label><input type="number" id="damage" min="1" value="10"></div>
         <div class="input-group"><label>Cadencia:</label><input type="number" id="fireRate" min="1" value="60"><select id="fireRateUnit"><option value="rpm">RPM</option><option value="rps">RPS</option></select></div>
         <div class="input-group"><label>Precisión (%):</label><input type="number" id="accuracy" min="0" max="100" value="100"></div>
+        <div class="input-group"><label>Dispersión (grados):</label><input type="number" id="spread" min="0" value="5"></div>
         <div class="input-group"><label>Tiempo Recarga (s):</label><input type="number" id="reloadTime" min="0" step="0.1" value="2"></div>
         <div class="input-group"><label>Munición:</label><input type="number" id="ammo" min="1" value="30"></div>
+        <div class="input-group"><label>Velocidad Proyectil (m/s):</label><input type="number" id="projectileSpeed" min="0" value="100"></div>
+        <div class="input-group"><label>Caída (m/s²):</label><input type="number" id="gravity" min="0" value="9.8"></div>
+        <div class="input-group"><label>Prob. Headshot (%):</label><input type="number" id="headshotChance" min="0" max="100" value="5"></div>
+        <div class="input-group"><label>Radio Explosión (m):</label><input type="number" id="blastRadius" min="0" value="2"></div>
+        <div class="input-group"><label>Distancia (m):</label><input type="number" id="distance" min="0" value="10"></div>
     </div>
     <button onclick="calculateDPS()">Calcular DPS</button>
     <div id="result"></div>
@@ -35,12 +42,19 @@
     <script>
         let chart;
         function calculateDPS() {
+            const weaponType = document.getElementById('weaponType').value;
             const damage = parseFloat(document.getElementById('damage').value);
             let fireRate = parseFloat(document.getElementById('fireRate').value);
             const fireRateUnit = document.getElementById('fireRateUnit').value;
             const accuracy = parseFloat(document.getElementById('accuracy').value) / 100;
+            const spread = parseFloat(document.getElementById('spread').value);
             const reloadTime = parseFloat(document.getElementById('reloadTime').value);
             const ammo = parseFloat(document.getElementById('ammo').value);
+            const projectileSpeed = parseFloat(document.getElementById('projectileSpeed').value);
+            const gravity = parseFloat(document.getElementById('gravity').value);
+            const headshotChance = parseFloat(document.getElementById('headshotChance').value) / 100;
+            const blastRadius = parseFloat(document.getElementById('blastRadius').value);
+            const distance = parseFloat(document.getElementById('distance').value);
 
             if (damage <= 0 || fireRate <= 0 || ammo <= 0) {
                 document.getElementById('result').innerHTML = "¡Valores inválidos!";
@@ -48,21 +62,38 @@
             }
 
             fireRate = fireRateUnit === 'rpm' ? fireRate / 60 : fireRate;
-            const effectiveDamage = damage * accuracy;
+            let effectiveAccuracy = accuracy;
+            let travelTime = 0;
+
+            if (weaponType === 'projectile' || weaponType === 'area') {
+                travelTime = distance / projectileSpeed;
+                const drop = 0.5 * gravity * travelTime * travelTime;
+                effectiveAccuracy *= Math.max(0, 1 - (drop / distance)); // Reduce precisión por caída
+                effectiveAccuracy *= Math.max(0, 1 - (spread * distance / 180)); // Reduce por dispersión
+            }
+            if (weaponType === 'area') {
+                effectiveAccuracy = Math.min(1, effectiveAccuracy + (blastRadius / distance)); // Más fácil acertar en área
+            }
+
+            const effectiveDamage = damage * effectiveAccuracy;
             const burstDPS = effectiveDamage * fireRate;
-            const cycleTime = (ammo / fireRate) + reloadTime;
+            const headshotDPS = weaponType !== 'area' ? burstDPS * headshotChance * 2 : 0; // Headshot x2 daño
+            const cycleTime = (ammo / fireRate) + reloadTime + travelTime;
             const sustainedDPS = (effectiveDamage * ammo) / cycleTime;
 
             document.getElementById('result').innerHTML = `
                 DPS de Ráfaga: ${burstDPS.toFixed(2)}<br>
-                DPS Sostenido: ${sustainedDPS.toFixed(2)}
+                DPS con Headshot: ${(burstDPS + headshotDPS).toFixed(2)}<br>
+                DPS Sostenido: ${sustainedDPS.toFixed(2)}<br>
+                Tiempo de Viaje: ${travelTime.toFixed(2)} s
             `;
 
             const dataPoints = [];
             let time = 0;
             while (time < 10) {
                 time += 0.1;
-                dataPoints.push({ time: time.toFixed(2), dps: time <= ammo / fireRate ? burstDPS : 0 });
+                const inFlight = time < travelTime ? 0 : (time <= (ammo / fireRate) + travelTime ? burstDPS : 0);
+                dataPoints.push({ time: time.toFixed(2), dps: inFlight });
             }
             drawChart(dataPoints);
         }
