@@ -115,7 +115,7 @@
             while (x <= distance) {
                 const t = x / projectileSpeed;
                 const y = weaponType === 'hitscan' ? 0 : -(0.5 * gravity * t * t);
-                trajData.push({ x: x.toFixed(2), y: Math.max(y, -distance) });
+                trajData.push({ x: x.toFixed(2), y: y });
                 x += distance / 50;
             }
             drawTrajectoryChart(trajData);
@@ -161,7 +161,11 @@
                 },
                 options: {
                     scales: {
-                        y: { title: { display: true, text: 'Altura (m)', color: '#ddd' }, reverse: true },
+                        y: { 
+                            title: { display: true, text: 'Altura (m)', color: '#ddd' },
+                            min: Math.min(...dataPoints.map(d => d.y)) - 1, // Ajusta límite inferior
+                            max: 1, // 0 y positivos arriba
+                        },
                         x: { title: { display: true, text: 'Distancia (m)', color: '#ddd' } }
                     },
                     plugins: { legend: { labels: { color: '#ddd' } } }
