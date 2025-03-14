@@ -4,8 +4,8 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta name="google-adsense-account" content="ca-pub-0463493221079646">
-    <title>Calculadora DPS Pro - Daño por Segundo con Proyectiles 2025</title>
-    <meta name="description" content="Calcula DPS para juegos con proyectiles, headshots y más. ¡Gratis, online y en español 2025!">  
+    <title>DPS Calculator Pro - Damage Per Second with Projectiles 2025</title>
+    <meta name="description" content="Calculate DPS for games with projectiles, headshots, and more. Free, online, and in English 2025!">  
     <meta name="keywords" content="dps calculator, damage per second tool, dps simulator gaming, dps calculator projectiles, calculadora dps, daño por segundo herramienta, simulador dps español, dps armas 2025, free dps calculator online, dps tool game dev">
     <script type="application/ld+json">
     {
@@ -14,18 +14,18 @@
       "mainEntity": [
         {
           "@type": "Question",
-          "name": "¿Qué mide una calculadora DPS?",
+          "name": "What does a DPS calculator measure?",
           "acceptedAnswer": {
             "@type": "Answer",
-            "text": "Mide el Daño por Segundo (DPS) de un arma, incluyendo ráfaga, sostenido y efectos como proyectiles o headshots."
+            "text": "It measures the Damage Per Second (DPS) of a weapon, including burst, sustained damage, and effects like projectiles or headshots."
           }
         },
         {
           "@type": "Question",
-          "name": "¿Es gratis la Calculadora DPS Pro?",
+          "name": "Is the DPS Calculator Pro free?",
           "acceptedAnswer": {
             "@type": "Answer",
-            "text": "Sí, es gratuita, online y en español, diseñada para game devs y jugadores."
+            "text": "Yes, it is free, online, and designed for game developers and players."
           }
         }
       ]
@@ -88,30 +88,30 @@
     </style>
 </head>
 <body>
-    <h1>Calculadora DPS Pro</h1>
-    <p>Calcula el Daño por Segundo (DPS) para armas hitscan, proyectiles o de área, con trayectorias y headshots. ¡Gráficos incluidos!</p>
+    <h1>DPS Calculator Pro</h1>
+    <p>Calculate Damage Per Second (DPS) for hitscan, projectile, or area weapons, including trajectories and headshots. Charts included!</p>
     <div class="section">
-        <div class="input-group"><label>Tipo de Arma:</label><select id="weaponType"><option value="hitscan">Hitscan</option><option value="projectile">Proyectil</option><option value="area">Área</option></select></div>
-        <div class="input-group"><label>Daño:</label><input type="number" id="damage" min="1" value="10"></div>
-        <div class="input-group"><label>Cadencia:</label><input type="number" id="fireRate" min="1" value="60"><select id="fireRateUnit"><option value="rpm">RPM</option><option value="rps">RPS</option></select></div>
-        <div class="input-group"><label>Precisión (%):</label><input type="number" id="accuracy" min="0" max="100" value="100"></div>
-        <div class="input-group"><label>Dispersión (grados):</label><input type="number" id="spread" min="0" value="5"></div>
-        <div class="input-group"><label>Tiempo Recarga (s):</label><input type="number" id="reloadTime" min="0" step="0.1" value="2"></div>
-        <div class="input-group"><label>Munición:</label><input type="number" id="ammo" min="1" value="30"></div>
-        <div class="input-group"><label>Velocidad Proyectil (m/s):</label><input type="number" id="projectileSpeed" min="0" value="100"></div>
-        <div class="input-group"><label>Caída (m/s²):</label><input type="number" id="gravity" min="0" value="9.8"></div>
-        <div class="input-group"><label>Prob. Headshot (%):</label><input type="number" id="headshotChance" min="0" max="100" value="5"></div>
-        <div class="input-group"><label>Radio Explosión (m):</label><input type="number" id="blastRadius" min="0" value="2"></div>
-        <div class="input-group"><label>Distancia (m):</label><input type="number" id="distance" min="0" value="10"></div>
+        <div class="input-group"><label>Weapon Type:</label><select id="weaponType"><option value="hitscan">Hitscan</option><option value="projectile">Projectile</option><option value="area">Area</option></select></div>
+        <div class="input-group"><label>Damage:</label><input type="number" id="damage" min="1" value="10"></div>
+        <div class="input-group"><label>Fire Rate:</label><input type="number" id="fireRate" min="1" value="60"><select id="fireRateUnit"><option value="rpm">RPM</option><option value="rps">RPS</option></select></div>
+        <div class="input-group"><label>Accuracy (%):</label><input type="number" id="accuracy" min="0" max="100" value="100"></div>
+        <div class="input-group"><label>Spread (degrees):</label><input type="number" id="spread" min="0" value="5"></div>
+        <div class="input-group"><label>Reload Time (s):</label><input type="number" id="reloadTime" min="0" step="0.1" value="2"></div>
+        <div class="input-group"><label>Ammo:</label><input type="number" id="ammo" min="1" value="30"></div>
+        <div class="input-group"><label>Projectile Speed (m/s):</label><input type="number" id="projectileSpeed" min="0" value="100"></div>
+        <div class="input-group"><label>Gravity (m/s²):</label><input type="number" id="gravity" min="0" value="9.8"></div>
+        <div class="input-group"><label>Headshot Chance (%):</label><input type="number" id="headshotChance" min="0" max="100" value="5"></div>
+        <div class="input-group"><label>Explosion Radius (m):</label><input type="number" id="blastRadius" min="0" value="2"></div>
+        <div class="input-group"><label>Distance (m):</label><input type="number" id="distance" min="0" value="10"></div>
     </div>
-    <button onclick="calculateDPS()">Calcular DPS</button>
-    <button onclick="resetData()">Resetear</button>
-    <button onclick="exportJSON()">Exportar JSON</button>
+    <button onclick="calculateDPS()">Calculate DPS</button>
+    <button onclick="resetData()">Reset</button>
+    <button onclick="exportJSON()">Export JSON</button>
     <div id="result"></div>
     <canvas id="dpsChart"></canvas>
     <canvas id="trajectoryChart"></canvas>
     <div class="donate">
-        <p>¿Te sirvió? <a href="https://buymeacoffee.com/genio043" target="_blank">Cómprame un té :)</a></p>
+        <p>Did you find this useful?  <a href="https://buymeacoffee.com/genio043" target="_blank">Buy me a tea :)</a></p>
     </div>
     <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-0463493221079646" crossorigin="anonymous"></script>
     <script>
@@ -146,7 +146,7 @@
             const distance = parseFloat(document.getElementById('distance').value);
 
             if (damage <= 0 || fireRate <= 0 || ammo <= 0) {
-                document.getElementById('result').innerHTML = "¡Valores inválidos!";
+                document.getElementById('result').innerHTML = "¡Invalid values!";
                 return;
             }
 
@@ -171,10 +171,10 @@
             const sustainedDPS = (effectiveDamage * ammo) / cycleTime;
 
             document.getElementById('result').innerHTML = `
-                DPS de Ráfaga: ${burstDPS.toFixed(2)}<br>
-                DPS con Headshot: ${(burstDPS + headshotDPS).toFixed(2)}<br>
-                DPS Sostenido: ${sustainedDPS.toFixed(2)}<br>
-                Tiempo de Viaje: ${travelTime.toFixed(2)} s
+                Burst DPS: ${burstDPS.toFixed(2)}<br>
+                DPS with Headshot: ${(burstDPS + headshotDPS).toFixed(2)}<br>
+                Sustained DPS: ${sustainedDPS.toFixed(2)}<br>
+                Travel Time: ${travelTime.toFixed(2)} s
             `;
 
             const dpsData = [];
@@ -224,7 +224,7 @@
                 options: {
                     scales: {
                         y: { beginAtZero: true, title: { display: true, text: 'DPS', color: '#ddd' } },
-                        x: { title: { display: true, text: 'Tiempo (s)', color: '#ddd' } }
+                        x: { title: { display: true, text: 'Time (s)', color: '#ddd' } }
                     },
                     plugins: { legend: { labels: { color: '#ddd' } } }
                 }
@@ -239,7 +239,7 @@
                 data: {
                     labels: dataPoints.map(d => d.x),
                     datasets: [{
-                        label: 'Trayectoria',
+                        label: 'Trajectory',
                         data: dataPoints.map(d => d.y),
                         borderColor: '#00ccff',
                         fill: false
@@ -248,11 +248,11 @@
                 options: {
                     scales: {
                         y: { 
-                            title: { display: true, text: 'Altura (m)', color: '#ddd' },
+                            title: { display: true, text: 'Height (m)', color: '#ddd' },
                             min: Math.min(...dataPoints.map(d => d.y)) - 1,
                             max: 1,
                         },
-                        x: { title: { display: true, text: 'Distancia (m)', color: '#ddd' } }
+                        x: { title: { display: true, text: 'Distance (m)', color: '#ddd' } }
                     },
                     plugins: { legend: { labels: { color: '#ddd' } } }
                 }
@@ -303,6 +303,6 @@
             URL.revokeObjectURL(url);
         }
     </script>
-    <footer><p>Volver a <a href="https://genio043.github.io/">Genio043 Tools</a></p></footer>
+    <footer><p>Back to <a href="https://genio043.github.io/">Genio043's Tools</a></p></footer>
 </body>
 </html>
