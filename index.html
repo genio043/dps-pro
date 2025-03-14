@@ -116,6 +116,20 @@
     <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-0463493221079646" crossorigin="anonymous"></script>
     <script>
         let dpsChart, trajectoryChart;
+        document.getElementById("weaponType").oninput = function() {calculateDPS()};
+        document.getElementById("damage").oninput = function() {calculateDPS()};
+        document.getElementById("fireRate").oninput = function() {calculateDPS()};
+        document.getElementById("fireRateUnit").oninput = function() {calculateDPS()};
+        document.getElementById("accuracy").oninput = function() {calculateDPS()};
+        document.getElementById("spread").oninput = function() {calculateDPS()};
+        document.getElementById("reloadTime").oninput = function() {calculateDPS()};
+        document.getElementById("ammo").oninput = function() {calculateDPS()};
+        document.getElementById("projectileSpeed").oninput = function() {calculateDPS()};
+        document.getElementById("gravity").oninput = function() {calculateDPS()};
+        document.getElementById("headshotChance").oninput = function() {calculateDPS()};
+        document.getElementById("blastRadius").oninput = function() {calculateDPS()};
+        document.getElementById("distance").oninput = function() {calculateDPS()};
+        
         function calculateDPS() {
             const weaponType = document.getElementById('weaponType').value;
             const damage = parseFloat(document.getElementById('damage').value);
